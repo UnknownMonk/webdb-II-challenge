@@ -58,6 +58,50 @@ server.put('/api/zoos/:id', (req, res) => {
     });
 });
 
+server.get('/api/bears', (req, res) => {
+  db('bears')
+    .then(zoos => {
+      res.status(200).json(zoos);
+    })
+    .catch(err => res.status(500).json(err));
+});
+
+server.post('/api/bears', (req, res) => {
+  db('bears')
+    .insert(req.body)
+    .then(ids => {
+      res.status(201).json(ids);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+server.delete('/api/bears/:id', (req, res) => {
+  db('bears')
+    .where({ id: req.params.id })
+    .del()
+    .then(count => {
+      res.status(200).json(count);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+server.put('/api/bears/:id', (req, res) => {
+  const changes = req.body;
+  db('bears')
+    .where({ id: req.params.id })
+    .update(changes)
+    .then(count => {
+      res.status(200).json(count);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
 const port = 4000;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
